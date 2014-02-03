@@ -1,10 +1,13 @@
 ﻿Option Strict On
-
+Option Explicit On
 Imports System.Security.Cryptography
 Imports System.Threading
-Imports IWshRuntimeLibrary
+'Imports IWshRuntimeLibrary
 Imports System.Reflection
-
+''' <summary>
+''' SimplePaste by Thomas Schmitz - All rights reserved
+''' </summary>
+''' <remarks></remarks>
 Public Class frmMain
 #Region "Hotkey"
 #Region " Methods "
@@ -225,12 +228,97 @@ Public Class frmMain
                        lbl_tpStatus.Text = "Login: not successful"
                        lbl_tpStatus.ForeColor = Color.Red
                    End If
-                   MessageBox.Show(My.Settings.tp_password)
+                   ' MessageBox.Show(My.Settings.tp_password)
                End Sub)
     End Sub
 #End Region
 #Region "Events"
 
+    Private Sub btn_adfLogin_Click(sender As Object, e As EventArgs) Handles btn_adfLogin.Click
+        With New Threading.Thread(AddressOf adflyLogin)
+            .IsBackground = True
+            .Start()
+        End With
+    End Sub
+
+    Private Sub DeleteAll_Click(sender As Object, e As EventArgs) Handles btn_deleteAll.Click
+        Select Case MessageBox.Show("Do you really want to delete all Settings? This can't be undone", "Really?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            Case Windows.Forms.DialogResult.Yes
+                My.Settings.Reset()
+            Case Windows.Forms.DialogResult.No
+                ':)
+        End Select
+    End Sub
+
+    Private Sub cb_adfDomain_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_adfDomain.SelectedIndexChanged
+        My.Settings.adf_domain = cb_adfDomain.SelectedIndex
+    End Sub
+
+    Private Sub cb_adfType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_adfType.SelectedIndexChanged
+        My.Settings.adf_type = cb_adfType.SelectedIndex
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Process.Start("http://pastebin.com/u/" & My.Settings.pb_username)
+    End Sub
+
+    Private Sub btn_ggStartAuth_Click(sender As Object, e As EventArgs) Handles btn_ggStartAuth.Click
+        Hoster.Googl.OpenAuthorization()
+        txt_ggCode.Enabled = True
+    End Sub
+
+    Private Sub txt_ggCode_TextChanged(sender As Object, e As EventArgs) Handles txt_ggCode.TextChanged
+        btn_ggComplete.Enabled = True
+    End Sub
+
+    Private Sub btn_ggComplete_Click(sender As Object, e As EventArgs) Handles btn_ggComplete.Click
+        If Hoster.Googl.EndVerification(txt_ggCode.Text) = True Then
+            lbl_ggStatus.Text = "Status: Successful authenticated"
+            lbl_ggStatus.ForeColor = Color.Green
+        Else
+            lbl_ggStatus.Text = "Status: Not successful authenticated"
+            lbl_ggStatus.ForeColor = Color.Red
+        End If
+    End Sub
+
+    Private Sub btn_ggOpen_Click(sender As Object, e As EventArgs) Handles btn_ggOpen.Click
+        Process.Start("http://goo.gl")
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+        onPaste()
+    End Sub
+    Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+        e.Cancel = True
+        Me.Hide()
+        Me.Opacity = 0
+        Me.ShowInTaskbar = False
+    End Sub
+    Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
+        Me.Show()
+        Me.Opacity = 1
+        Me.ShowInTaskbar = True
+        Me.BringToFront()
+    End Sub
+
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+        My.Settings.Save()
+        ni_main.Dispose()
+        Application.Exit()
+    End Sub
+
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        Process.Start("https://github.com/po-tato")
+    End Sub
+
+    Private Sub lbl_whatsthat_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lbl_whatsthat.LinkClicked
+        MessageBox.Show("After verification, you'll be redirected to such a url. Please enter it in the box below")
+        Process.Start("http://s14.directupload.net/images/140202/sdw9u624.png")
+    End Sub
+
+    Private Sub btn_checkforUpdates_Click(sender As Object, e As EventArgs) Handles btn_checkforUpdates.Click
+        Functions.CheckForUpdates(True)
+    End Sub
     Private Sub cb_autostart_CheckedChanged(sender As Object, e As EventArgs) Handles cb_autostart.CheckedChanged
         My.Settings.cb_startwithwindows = cb_autostart.Checked
         Select Case cb_autostart.Checked
@@ -302,11 +390,12 @@ Public Class frmMain
         My.Settings.txt_Subdomain = txt_tpSub.Text
     End Sub
 #End Region
+#Region "Paste"
     Private Sub onPaste()
         Dim Text As String = Clipboard.GetText
-        Select Case Functions.getHoster
+        Select Case Functions.GetHoster
             Case Functions.Hoster.Pastebin
-                Dim url As Uri = Hoster.Pastebin.Paste(Functions.getTitle, Text, True, Functions.getPastebinSyntaxHighliting, Hoster.Pastebin.PasteExpire.Never, Hoster.Pastebin.Privacy.PublicPaste)
+                Dim url As Uri = Hoster.Pastebin.Paste(Functions.getTitle, Text, True, Functions.GetPastebinSyntaxHighliting, Hoster.Pastebin.PasteExpire.Never, Hoster.Pastebin.Privacy.PublicPaste)
                 If url = Nothing Then
                     Exit Sub
                 End If
@@ -450,90 +539,5 @@ Public Class frmMain
                 End If
         End Select
     End Sub
-
-    Private Sub btn_adfLogin_Click(sender As Object, e As EventArgs) Handles btn_adfLogin.Click
-        With New Threading.Thread(AddressOf adflyLogin)
-            .IsBackground = True
-            .Start()
-        End With
-    End Sub
-
-    Private Sub DeleteAll_Click(sender As Object, e As EventArgs) Handles btn_deleteAll.Click
-        Select Case MessageBox.Show("Do you really want to delete all Settings? This can't be undone", "Really?", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-            Case Windows.Forms.DialogResult.Yes
-                My.Settings.Reset()
-            Case Windows.Forms.DialogResult.No
-                ':)
-        End Select
-    End Sub
-
-    Private Sub cb_adfDomain_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_adfDomain.SelectedIndexChanged
-        My.Settings.adf_domain = cb_adfDomain.SelectedIndex
-    End Sub
-
-    Private Sub cb_adfType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_adfType.SelectedIndexChanged
-        My.Settings.adf_type = cb_adfType.SelectedIndex
-    End Sub
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Process.Start("http://pastebin.com/u/" & My.Settings.pb_username)
-    End Sub
-
-    Private Sub btn_ggStartAuth_Click(sender As Object, e As EventArgs) Handles btn_ggStartAuth.Click
-        Hoster.Googl.OpenAuthorization()
-        txt_ggCode.Enabled = True
-    End Sub
-
-    Private Sub txt_ggCode_TextChanged(sender As Object, e As EventArgs) Handles txt_ggCode.TextChanged
-        btn_ggComplete.Enabled = True
-    End Sub
-
-    Private Sub btn_ggComplete_Click(sender As Object, e As EventArgs) Handles btn_ggComplete.Click
-        If Hoster.Googl.EndVerification(txt_ggCode.Text) = True Then
-            lbl_ggStatus.Text = "Status: Successful authenticated"
-            lbl_ggStatus.ForeColor = Color.Green
-        Else
-            lbl_ggStatus.Text = "Status: Not successful authenticated"
-            lbl_ggStatus.ForeColor = Color.Red
-        End If
-    End Sub
-
-    Private Sub btn_ggOpen_Click(sender As Object, e As EventArgs) Handles btn_ggOpen.Click
-        Process.Start("http://goo.gl")
-    End Sub
-
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
-        onPaste()
-    End Sub
-    Private Sub Form1_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
-        e.Cancel = True
-        Me.Hide()
-        Me.Opacity = 0
-        Me.ShowInTaskbar = False
-    End Sub
-Private Sub ToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem2.Click
-    Me.Show()
-    Me.Opacity = 1
-    Me.ShowInTaskbar = True
-    Me.BringToFront()
-End Sub
-
-Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
-        My.Settings.Save()
-        ni_main.Dispose()
-    Application.Exit()
-End Sub
-
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        Process.Start("https://github.com/po-tato")
-    End Sub
-
-    Private Sub lbl_whatsthat_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lbl_whatsthat.LinkClicked
-        MessageBox.Show("After verification, you'll be redirected to such a url. Please enter it in the box below")
-        Process.Start("http://s14.directupload.net/images/140202/sdw9u624.png")
-    End Sub
-
-    Private Sub btn_checkforUpdates_Click(sender As Object, e As EventArgs) Handles btn_checkforUpdates.Click
-        Functions.CheckForUpdates(True)
-    End Sub
+#End Region
 End Class

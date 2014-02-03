@@ -10,7 +10,12 @@ Imports Microsoft.Win32
 
 Public Class Functions
 #Region "SyntaxHighliting"
-    Public Shared Function getPastebinSyntaxHighliting() As String
+    ''' <summary>
+    ''' Returns the Pastebin Syntax  Highliting Code
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetPastebinSyntaxHighliting() As String
         Select Case frmMain.cb_syntax.SelectedIndex
             Case 0
                 Return "4cs"
@@ -452,7 +457,12 @@ Public Class Functions
                 Return "zxbasic"
         End Select
     End Function
-    Public Shared Function getChopSyntaxHighliting() As String
+    ''' <summary>
+    ''' Returns the Chop Syntax Highliting Code
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetChopSyntaxHighliting() As String
         Select Case frmMain.cb_syntax.SelectedIndex
             Case 33
                 Return "c"
@@ -474,12 +484,18 @@ Public Class Functions
     End Function
 #End Region
 #Region "MD5"
+    ''' <summary>
+    ''' MD5 Function, which returns a MD5 hash from a string
+    ''' </summary>
+    ''' <param name="strString">The String</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Shared Function MD5StringHash(ByVal strString As String) As String
         Dim MD5 As New MD5CryptoServiceProvider
         Dim Data As Byte()
         Dim Result As Byte()
-        Dim Res As String = ""
-        Dim Tmp As String = ""
+        Dim Res As String = String.Empty
+        Dim Tmp As String = String.Empty
 
         Data = Encoding.ASCII.GetBytes(strString)
         Result = MD5.ComputeHash(Data)
@@ -619,6 +635,11 @@ Public Class Functions
     End Function
 #End Region
 #Region "Normal Functions"
+    ''' <summary>
+    ''' Checks for Updates with the Updatesystem.NET
+    ''' </summary>
+    ''' <param name="async"></param>
+    ''' <remarks></remarks>
     Public Shared Sub CheckForUpdates(async As Boolean)
         Dim updController As New updateSystemDotNet.updateController()
         updController.updateUrl = "http://simplepaste.si.funpic.de/Update/"
@@ -635,6 +656,11 @@ Public Class Functions
             updController.updateInteractive()
         End If
     End Sub
+    ''' <summary>
+    ''' Returns the Title of the paste
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Shared Function getTitle() As String
         Dim originalTitle As String = frmMain.txt_titleFormation.Text
         Dim a As String = originalTitle
@@ -662,7 +688,12 @@ Public Class Functions
         Googl
         adfly
     End Enum
-    Public Shared Function getHoster() As Hoster
+    ''' <summary>
+    ''' Returns the favourite Hoster
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetHoster() As Hoster
         Select Case frmMain.cb_Hoster.SelectedIndex
             Case 0
                 Return Hoster.Pastebin
@@ -674,6 +705,11 @@ Public Class Functions
                 Return Hoster.Chop
         End Select
     End Function
+    ''' <summary>
+    ''' Returns the favourite URL Shortener
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Shared Function getShortener() As Shorter
         Select Case frmMain.cb_linkshortener.SelectedIndex
             Case 0
@@ -684,6 +720,11 @@ Public Class Functions
                 Return Shorter.adfly
         End Select
     End Function
+    ''' <summary>
+    ''' Adds the program to the Autostart
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <remarks></remarks>
     Public Shared Sub AddToAutostart(value As Boolean)
         Select Case value
             Case True

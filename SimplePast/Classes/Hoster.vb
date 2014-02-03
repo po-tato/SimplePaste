@@ -582,6 +582,10 @@ Namespace Hoster
             End With
         End Function
     End Class
+    ''' <summary>
+    ''' Class to Paste at Hastebin
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class Hastebin
         Public Shared Function Paste(Text As String) As Uri
             Dim post As String = Text
@@ -596,8 +600,14 @@ Namespace Hoster
         End Function
     End Class
     Public Class Chop
+        ''' <summary>
+        ''' Class to paste at Chop
+        ''' </summary>
+        ''' <param name="Text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Shared Function Paste(Text As String) As Uri
-            Dim Highliting As String = Functions.getChopSyntaxHighliting
+            Dim Highliting As String = Functions.GetChopSyntaxHighliting
             Dim post As String = "code=" & Text & "&language=" & Highliting & "&url=Drop+in+a+URL..."
             Dim url As String = "http://chopapp.com/code_snips"
             Dim html As String = CStr(Postreq(url, post))
@@ -605,6 +615,10 @@ Namespace Hoster
             Return New Uri("http://chopapp.com/#" & id)
         End Function
     End Class
+    ''' <summary>
+    ''' Class to use the Tinypaste API
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class Tinypast
         Public Shared Property Username As String
         Public Shared Property Password As String
@@ -649,6 +663,10 @@ Namespace Hoster
             End If
         End Function
     End Class
+    ''' <summary>
+    ''' Class to use the bit.ly API
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class Bitly
         Private Shared Property client_id As String = "b8e0ea22c2feed70f22d2a9e280720eb56e9ae86"
         Private Shared Property client_secret As String = "2c22560d37d5146e4ada093db17df27bf95bb2af"
@@ -690,6 +708,10 @@ Namespace Hoster
             End If
         End Function
     End Class
+    ''' <summary>
+    ''' Class to use the Adf.ly API 
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class Adfly
         Public Shared Property APIKey As String
         Public Shared Property UserID As String
@@ -717,6 +739,10 @@ Namespace Hoster
             End If
         End Function
     End Class
+    ''' <summary>
+    ''' Class to use the Goo.gl API with OAuth
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class Googl
         Private Shared Property client_id As String = "569470551360-ctuedv0bbvhsgs9ei2412pr5sk7v8pkb.apps.googleusercontent.com"
         Private Shared Property client_secret As String = "vWFkaotVwaoo8V9ifX5MfQss"
